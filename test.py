@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 import string
 import json
 import sys
+from base64 import b64encode
 #import M2Crypto
 #from M2crypto import BIO, RSA
 
@@ -234,33 +235,23 @@ class SoapClientBuilder_v2():
 
 
 
-print('----------------------------------')
 password1 = 'NITA123'
 s = SoapClientBuilder_v2
 nonce_byte_arry = s.generatenonce_asbytes()
-print('-----------nonce_asbytearray----------')
-byteObject = bytes(nonce_byte_arry)
-print(byteObject)
-print('-----------nonce_asbytearray----------')
-
-print('--------Nonce as a string------------------')
-o = base64.b64encode(bytes(str(byteObject), 'utf-8'))
-print(o.decode("utf-8"))
-print('--------Nonce as a string------------------')
+print('-----------Nonce----------')
+token = b64encode(nonce_byte_arry).decode('utf-8')
+print(token)
+print('--------Nonce------------------')
 
 
-
-
+print('-----------Created time----------')
 createdTime = SoapClientBuilder_v2.create_timestamp()
 created_byte = SoapClientBuilder_v2.timestamp_fordigest(createdTime)
 created_byte66666 = bytes(createdTime, 'utf-8')
-print('-----------timestamp digest_asbytes----------')
-print(created_byte66666)
-print('-----------timestamp_asbytes array----------')
 created_byte_arry = SoapClientBuilder_v2.gettimestamp_asbytes(created_byte)
-print(created_byte_arry)
 t = base64.b64encode(bytes(str(created_byte_arry), 'utf-8'))
-print(t.decode("utf-8"))
+print(created_byte)
+print('-----------Created time----------')
 
 
 password1 = 'NITA123'
@@ -268,8 +259,6 @@ password1 = 'NITA123'
 s.password = password1
 
 password_hash = s.hashpassword_withdigest()
-print('-----------SHA1(Password)----------')
-print(password_hash)
 
 # k = sha1(password1.encode('utf-8'))
 # PWSHA1 = k.digest() 
@@ -282,19 +271,29 @@ print(password_hash)
 # PWSHA2 = PWSHA.digest() 
 # print(PWSHA2)
 
-
-concValue = s.generatedigest_withbytesvalues(nonce_byte_arry,created_byte_arry,password_hash)
 print('-----------Password_Digest with Conc Value----------')
+concValue = s.generatedigest_withbytesvalues(nonce_byte_arry,created_byte_arry,password_hash)
 print(concValue)
+print('-----------Password_Digest with Conc Value----------')
 
-print('...........................')
-CONCAT = nonce_byte_arry + created_byte_arry + password_hash
+# print('...........................')
+# CONCAT = nonce_byte_arry + created_byte_arry + password_hash
 
-CSHA = sha1()
+# CSHA = sha1()
 
-CSHA.update(CONCAT)
+# CSHA.update(CONCAT)
 
-PWDIGEST = base64.b64encode(CSHA.digest())
+# PWDIGEST = base64.b64encode(CSHA.digest())
 
-print(type(PWDIGEST), PWDIGEST)
-print('.................................')
+# print(type(PWDIGEST), PWDIGEST)
+# print('.................................')
+
+
+
+
+# from base64 import b64encode
+# random_bytes = os.urandom(16)
+# print(random_bytes)
+# token = b64encode(random_bytes).decode('utf-8')
+# print(len(token))
+# print(token)
